@@ -29,6 +29,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.btnEditItem = new System.Windows.Forms.Button();
+            this.btnDeleteItem = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numQuantity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPantry)).BeginInit();
             this.SuspendLayout();
@@ -87,11 +89,11 @@
             this.dgvPantry.AllowUserToDeleteRows = false;
             this.dgvPantry.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvPantry.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvPantry.Location = new System.Drawing.Point(30, 269);
+            this.dgvPantry.Location = new System.Drawing.Point(24, 323);
             this.dgvPantry.Name = "dgvPantry";
             this.dgvPantry.ReadOnly = true;
             this.dgvPantry.RowHeadersWidth = 51;
-            this.dgvPantry.Size = new System.Drawing.Size(480, 173);
+            this.dgvPantry.Size = new System.Drawing.Size(480, 188);
             this.dgvPantry.TabIndex = 10;
             // 
             // label1
@@ -133,17 +135,39 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(30, 243);
+            this.label5.Location = new System.Drawing.Point(21, 293);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(65, 13);
             this.label5.TabIndex = 9;
             this.label5.Text = "Pantry Items";
             // 
+            // btnEditItem
+            // 
+            this.btnEditItem.Location = new System.Drawing.Point(30, 229);
+            this.btnEditItem.Name = "btnEditItem";
+            this.btnEditItem.Size = new System.Drawing.Size(142, 30);
+            this.btnEditItem.TabIndex = 11;
+            this.btnEditItem.Text = "Edit Item";
+            this.btnEditItem.UseVisualStyleBackColor = true;
+            this.btnEditItem.Click += new System.EventHandler(this.btnEditItem_Click);
+            // 
+            // btnDeleteItem
+            // 
+            this.btnDeleteItem.Location = new System.Drawing.Point(178, 229);
+            this.btnDeleteItem.Name = "btnDeleteItem";
+            this.btnDeleteItem.Size = new System.Drawing.Size(148, 30);
+            this.btnDeleteItem.TabIndex = 12;
+            this.btnDeleteItem.Text = "Delete Item";
+            this.btnDeleteItem.UseVisualStyleBackColor = true;
+            this.btnDeleteItem.Click += new System.EventHandler(this.btnDeleteItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(549, 477);
+            this.ClientSize = new System.Drawing.Size(572, 591);
+            this.Controls.Add(this.btnDeleteItem);
+            this.Controls.Add(this.btnEditItem);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtName);
             this.Controls.Add(this.label2);
@@ -178,5 +202,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button btnEditItem;
+        private System.Windows.Forms.Button btnDeleteItem;
     }
 }

@@ -68,5 +68,47 @@ namespace RecipePantryManager
         {
 
         }
+
+        private void btnEditItem_Click(object sender, EventArgs e)
+        {
+            if (dgvPantry.CurrentRow == null)
+            {
+                MessageBox.Show("Please select an item to edit.");
+                return;
+            }
+
+            PantryItem selectedItem = (PantryItem)dgvPantry.CurrentRow.DataBoundItem;
+
+            selectedItem.Name = txtName.Text.Trim();
+            selectedItem.Quantity = (double)numQuantity.Value;
+            selectedItem.Unit = cmbUnit.SelectedItem != null
+                ? cmbUnit.SelectedItem.ToString()
+                : selectedItem.Unit;
+
+            selectedItem.ExpiryDate = dtpExpiry.Checked
+                ? (DateTime?)dtpExpiry.Value.Date
+                : null;
+
+            dgvPantry.Refresh();
+
+            MessageBox.Show("Item updated successfully.");
+
+            ClearInputs();
+        }
+
+        private void btnDeleteItem_Click(object sender, EventArgs e)
+        {
+            if (dgvPantry.CurrentRow == null)
+            {
+                MessageBox.Show("Please select an item to delete.");
+                return;
+            }
+
+            PantryItem selectedItem = (PantryItem)dgvPantry.CurrentRow.DataBoundItem;
+
+            pantryItems.Remove(selectedItem);
+
+            MessageBox.Show("Item deleted successfully.");
+        }
     }
 }
