@@ -10,6 +10,7 @@ namespace RecipePantryManager
 {
     public partial class Form1 : Form
     {
+        // Lists used to store pantry and recipe data
         private BindingList<PantryItem> pantryItems = new BindingList<PantryItem>();
 
         private BindingList<RecipeIngredient> currentIngredients =
@@ -24,21 +25,25 @@ namespace RecipePantryManager
         {
             InitializeComponent();
 
-            // Pantry units
+            // Add units for pantry items
             cmbUnit.Items.Add("kg");
             cmbUnit.Items.Add("g");
             cmbUnit.Items.Add("L");
             cmbUnit.Items.Add("ml");
             cmbUnit.Items.Add("pcs");
 
-            // Load saved pantry items
+            // Load previously saved pantry data
             List<PantryItem> savedItems = storage.LoadPantry();
 
             pantryItems = new BindingList<PantryItem>(savedItems);
 
             dgvPantry.DataSource = pantryItems;
 
-            // Recipe ingredient units
+            List<Recipe> savedRecipes = storage.LoadRecipes();
+
+            recipes = new BindingList<Recipe>(savedRecipes);
+
+            // Add units for recipe ingredients
             cmbIngredientUnit.Items.Add("kg");
             cmbIngredientUnit.Items.Add("g");
             cmbIngredientUnit.Items.Add("L");
@@ -50,6 +55,7 @@ namespace RecipePantryManager
 
         private void btnAddItem_Click(object sender, EventArgs e)
         {
+            // Check if item name was entered
             if (string.IsNullOrWhiteSpace(txtName.Text))
             {
                 MessageBox.Show("Please enter an item name.");
@@ -81,6 +87,7 @@ namespace RecipePantryManager
 
             pantryItems.Add(item);
 
+            // Save changes to JSON file
             storage.SavePantry(pantryItems.ToList());
 
             ClearInputs();
@@ -109,6 +116,7 @@ namespace RecipePantryManager
                 return;
             }
 
+            // Update the selected pantry item
             selectedItem.Name = txtName.Text.Trim();
             selectedItem.Quantity = (double)numQuantity.Value;
 
@@ -148,6 +156,7 @@ namespace RecipePantryManager
             MessageBox.Show("Item deleted successfully.");
         }
 
+        // Clears pantry input fields
         private void ClearInputs()
         {
             txtName.Clear();
@@ -155,10 +164,6 @@ namespace RecipePantryManager
             cmbUnit.SelectedIndex = -1;
             dtpExpiry.Checked = false;
         }
-
-        // ----------------------------
-        // Recipe functionality
-        // ----------------------------
 
         private void btnAddIngredient_Click(object sender, EventArgs e)
         {
@@ -216,6 +221,7 @@ namespace RecipePantryManager
                 return;
             }
 
+            // Create a new recipe
             Recipe recipe = new Recipe
             {
                 Id = recipes.Count + 1,
@@ -226,6 +232,8 @@ namespace RecipePantryManager
 
             recipes.Add(recipe);
 
+            storage.SaveRecipes(recipes.ToList());
+
             MessageBox.Show("Recipe saved successfully.");
 
             txtRecipeName.Clear();
@@ -233,6 +241,7 @@ namespace RecipePantryManager
             currentIngredients.Clear();
         }
 
+        // Clears ingredient input fields
         private void ClearIngredientInputs()
         {
             txtIngredientName.Clear();
@@ -250,6 +259,7 @@ namespace RecipePantryManager
                 return;
             }
 
+            // Check every recipe against pantry items
             foreach (Recipe recipe in recipes)
             {
                 bool canCook = true;
@@ -285,9 +295,6 @@ namespace RecipePantryManager
                 }
             }
         }
-
-        // These methods were already connected in your form.
-        // They can remain empty for now.
 
         private void txtName_TextChanged(object sender, EventArgs e)
         {

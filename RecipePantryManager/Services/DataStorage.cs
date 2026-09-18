@@ -10,6 +10,7 @@ namespace RecipePantryManager.Services
     public class DataStorage
     {
         private string pantryFile = "pantry.json";
+        private string recipeFile = "recipes.json";
 
         public List<PantryItem> LoadPantry()
         {
@@ -48,6 +49,46 @@ namespace RecipePantryManager.Services
             catch
             {
                 MessageBox.Show("Unable to save pantry data.");
+            }
+        }
+
+        public List<Recipe> LoadRecipes()
+        {
+            try
+            {
+                if (!File.Exists(recipeFile))
+                {
+                    return new List<Recipe>();
+                }
+
+                string json = File.ReadAllText(recipeFile);
+
+                List<Recipe> savedRecipes =
+                    JsonSerializer.Deserialize<List<Recipe>>(json);
+
+                return savedRecipes ?? new List<Recipe>();
+            }
+            catch
+            {
+                MessageBox.Show("Unable to load recipe data.");
+                return new List<Recipe>();
+            }
+        }
+
+        public void SaveRecipes(List<Recipe> recipes)
+        {
+            try
+            {
+                string json = JsonSerializer.Serialize(
+                    recipes,
+                    new JsonSerializerOptions { WriteIndented = true }
+                );
+
+                File.WriteAllText(recipeFile, json);
+            }
+            catch
+            {
+                MessageBox.Show("Unable to save recipe data.");
             }
         }
     }
