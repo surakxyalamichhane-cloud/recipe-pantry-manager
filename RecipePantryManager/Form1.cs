@@ -1,6 +1,9 @@
 ﻿using RecipePantryManager.Models;
+using RecipePantryManager.Services;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace RecipePantryManager
@@ -8,6 +11,8 @@ namespace RecipePantryManager
     public partial class Form1 : Form
     {
         private BindingList<PantryItem> pantryItems = new BindingList<PantryItem>();
+
+        private DataStorage storage = new DataStorage();
 
         public Form1()
         {
@@ -18,6 +23,10 @@ namespace RecipePantryManager
             cmbUnit.Items.Add("L");
             cmbUnit.Items.Add("ml");
             cmbUnit.Items.Add("pcs");
+
+            List<PantryItem> savedItems = storage.LoadPantry();
+
+            pantryItems = new BindingList<PantryItem>(savedItems);
 
             dgvPantry.DataSource = pantryItems;
         }
@@ -52,6 +61,7 @@ namespace RecipePantryManager
             };
 
             pantryItems.Add(item);
+            storage.SavePantry(pantryItems.ToList());
 
             ClearInputs();
         }
@@ -90,6 +100,7 @@ namespace RecipePantryManager
                 : null;
 
             dgvPantry.Refresh();
+            storage.SavePantry(pantryItems.ToList());
 
             MessageBox.Show("Item updated successfully.");
 
@@ -107,6 +118,7 @@ namespace RecipePantryManager
             PantryItem selectedItem = (PantryItem)dgvPantry.CurrentRow.DataBoundItem;
 
             pantryItems.Remove(selectedItem);
+            storage.SavePantry(pantryItems.ToList());
 
             MessageBox.Show("Item deleted successfully.");
         }
