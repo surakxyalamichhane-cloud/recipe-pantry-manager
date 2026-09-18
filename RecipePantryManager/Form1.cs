@@ -240,6 +240,52 @@ namespace RecipePantryManager
             cmbIngredientUnit.SelectedIndex = -1;
         }
 
+        private void btnCheckRecipes_Click(object sender, EventArgs e)
+        {
+            lstRecipeResults.Items.Clear();
+
+            if (recipes.Count == 0)
+            {
+                MessageBox.Show("No recipes have been saved yet.");
+                return;
+            }
+
+            foreach (Recipe recipe in recipes)
+            {
+                bool canCook = true;
+
+                foreach (RecipeIngredient ingredient in recipe.Ingredients)
+                {
+                    PantryItem matchingItem = pantryItems.FirstOrDefault(item =>
+                        item.Name.Equals(
+                            ingredient.Name,
+                            StringComparison.OrdinalIgnoreCase)
+                        &&
+                        item.Unit.Equals(
+                            ingredient.Unit,
+                            StringComparison.OrdinalIgnoreCase));
+
+                    if (matchingItem == null ||
+                        matchingItem.Quantity < ingredient.Quantity)
+                    {
+                        canCook = false;
+                        break;
+                    }
+                }
+
+                if (canCook)
+                {
+                    lstRecipeResults.Items.Add(
+                        recipe.Name + " - Can Cook");
+                }
+                else
+                {
+                    lstRecipeResults.Items.Add(
+                        recipe.Name + " - Cannot Cook");
+                }
+            }
+        }
+
         // These methods were already connected in your form.
         // They can remain empty for now.
 

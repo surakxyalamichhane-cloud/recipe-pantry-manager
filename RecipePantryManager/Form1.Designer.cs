@@ -45,6 +45,8 @@
             this.label11 = new System.Windows.Forms.Label();
             this.dgvIngredients = new System.Windows.Forms.DataGridView();
             this.btnSaveRecipe = new System.Windows.Forms.Button();
+            this.btnCheckRecipes = new System.Windows.Forms.Button();
+            this.lstRecipeResults = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.numQuantity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPantry)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numIngredientQuantity)).BeginInit();
@@ -310,11 +312,31 @@
             this.btnSaveRecipe.UseVisualStyleBackColor = true;
             this.btnSaveRecipe.Click += new System.EventHandler(this.btnSaveRecipe_Click);
             // 
+            // btnCheckRecipes
+            // 
+            this.btnCheckRecipes.Location = new System.Drawing.Point(484, 553);
+            this.btnCheckRecipes.Name = "btnCheckRecipes";
+            this.btnCheckRecipes.Size = new System.Drawing.Size(194, 30);
+            this.btnCheckRecipes.TabIndex = 27;
+            this.btnCheckRecipes.Text = "Check Recipes";
+            this.btnCheckRecipes.UseVisualStyleBackColor = true;
+            this.btnCheckRecipes.Click += new System.EventHandler(this.btnCheckRecipes_Click);
+            // 
+            // lstRecipeResults
+            // 
+            this.lstRecipeResults.FormattingEnabled = true;
+            this.lstRecipeResults.Location = new System.Drawing.Point(484, 598);
+            this.lstRecipeResults.Name = "lstRecipeResults";
+            this.lstRecipeResults.Size = new System.Drawing.Size(365, 108);
+            this.lstRecipeResults.TabIndex = 28;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(953, 591);
+            this.ClientSize = new System.Drawing.Size(953, 770);
+            this.Controls.Add(this.lstRecipeResults);
+            this.Controls.Add(this.btnCheckRecipes);
             this.Controls.Add(this.btnSaveRecipe);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.dgvIngredients);
@@ -383,5 +405,7 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.DataGridView dgvIngredients;
         private System.Windows.Forms.Button btnSaveRecipe;
+        private System.Windows.Forms.Button btnCheckRecipes;
+        private System.Windows.Forms.ListBox lstRecipeResults;
     }
 }
