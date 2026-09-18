@@ -259,10 +259,9 @@ namespace RecipePantryManager
                 return;
             }
 
-            // Check every recipe against pantry items
             foreach (Recipe recipe in recipes)
             {
-                bool canCook = true;
+                List<string> missingIngredients = new List<string>();
 
                 foreach (RecipeIngredient ingredient in recipe.Ingredients)
                 {
@@ -275,15 +274,17 @@ namespace RecipePantryManager
                             ingredient.Unit,
                             StringComparison.OrdinalIgnoreCase));
 
-                    if (matchingItem == null ||
-                        matchingItem.Quantity < ingredient.Quantity)
+                    if (matchingItem == null)
                     {
-                        canCook = false;
-                        break;
+                        missingIngredients.Add(ingredient.Name);
+                    }
+                    else if (matchingItem.Quantity < ingredient.Quantity)
+                    {
+                        missingIngredients.Add(ingredient.Name);
                     }
                 }
 
-                if (canCook)
+                if (missingIngredients.Count == 0)
                 {
                     lstRecipeResults.Items.Add(
                         recipe.Name + " - Can Cook");
@@ -291,7 +292,8 @@ namespace RecipePantryManager
                 else
                 {
                     lstRecipeResults.Items.Add(
-                        recipe.Name + " - Cannot Cook");
+                        recipe.Name + " - Cannot Cook - Missing: " +
+                        string.Join(", ", missingIngredients));
                 }
             }
         }
