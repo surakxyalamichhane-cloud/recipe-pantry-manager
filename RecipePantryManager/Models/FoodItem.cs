@@ -2,14 +2,39 @@
 {
     public abstract class FoodItem
     {
-        public string Name { get; set; }
-        public double Quantity { get; set; }
-        public string Unit { get; set; }
+        private string name;
+        private double quantity;
+        private string unit;
+
+        public string Name
+        {
+            get { return name; }
+            set { name = value == null ? "" : value.Trim(); }
+        }
+
+        public double Quantity
+        {
+            get { return quantity; }
+            set
+            {
+                if (value < 0)
+                    quantity = 0;
+                else
+                    quantity = value;
+            }
+        }
+
+        public string Unit
+        {
+            get { return unit; }
+            set { unit = value == null ? "" : value.Trim(); }
+        }
 
         public FoodItem()
         {
-            Name = "";
-            Unit = "";
+            name = "";
+            unit = "";
+            quantity = 0;
         }
 
         public virtual string GetDisplayInfo()
