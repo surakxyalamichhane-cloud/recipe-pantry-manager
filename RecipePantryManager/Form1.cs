@@ -311,5 +311,57 @@ namespace RecipePantryManager
             DataGridViewCellEventArgs e)
         {
         }
+
+        private void btnCookRecipe_Click(object sender, EventArgs e)
+        {
+            if (lstRecipes.SelectedIndex == -1)
+            {
+                MessageBox.Show("Please select a recipe.");
+                return;
+            }
+
+            Recipe selectedRecipe = recipes[lstRecipes.SelectedIndex];
+
+            foreach (RecipeIngredient ingredient in selectedRecipe.Ingredients)
+            {
+                PantryItem matchingItem = pantryItems.FirstOrDefault(item =>
+                    item.Name.Equals(
+                        ingredient.Name,
+                        StringComparison.OrdinalIgnoreCase)
+                    &&
+                    item.Unit.Equals(
+                        ingredient.Unit,
+                        StringComparison.OrdinalIgnoreCase));
+
+                if (matchingItem == null ||
+                    matchingItem.Quantity < ingredient.Quantity)
+                {
+                    MessageBox.Show("Not enough ingredients to cook this recipe.");
+                    return;
+                }
+            }
+
+            foreach (RecipeIngredient ingredient in selectedRecipe.Ingredients)
+            {
+                PantryItem matchingItem = pantryItems.First(item =>
+                    item.Name.Equals(
+                        ingredient.Name,
+                        StringComparison.OrdinalIgnoreCase)
+                    &&
+                    item.Unit.Equals(
+                        ingredient.Unit,
+                        StringComparison.OrdinalIgnoreCase));
+
+                matchingItem.Quantity -= ingredient.Quantity;
+            }
+
+            dgvPantry.Refresh();
+
+            storage.SavePantry(pantryItems.ToList());
+
+            MessageBox.Show(
+                "Recipe cooked successfully. Pantry quantities have been updated."
+            );
+        }
     }
 }
