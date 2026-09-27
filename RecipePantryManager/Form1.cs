@@ -22,6 +22,12 @@ namespace RecipePantryManager
 
         private DataStorage storage = new DataStorage();
 
+        // Used for recipe edit and filtered recipe display
+        private int editingRecipeIndex = -1;
+
+        private List<Recipe> displayedRecipes =
+            new List<Recipe>();
+
         public Form1()
         {
             InitializeComponent();
@@ -34,7 +40,8 @@ namespace RecipePantryManager
             cmbUnit.Items.Add("pcs");
 
             // Load saved pantry items
-            List<PantryItem> savedItems = storage.LoadPantry();
+            List<PantryItem> savedItems =
+                storage.LoadPantry();
 
             pantryItems =
                 new BindingList<PantryItem>(savedItems);
@@ -48,12 +55,6 @@ namespace RecipePantryManager
             recipes =
                 new BindingList<Recipe>(savedRecipes);
 
-            // Show saved recipes in list
-            foreach (Recipe recipe in recipes)
-            {
-                lstRecipes.Items.Add(recipe.Name);
-            }
-
             // Recipe ingredient units
             cmbIngredientUnit.Items.Add("kg");
             cmbIngredientUnit.Items.Add("g");
@@ -63,6 +64,9 @@ namespace RecipePantryManager
 
             dgvIngredients.DataSource =
                 currentIngredients;
+
+            // Show saved recipes
+            RefreshRecipeList();
 
             // Check expiry when program opens
             CheckExpiryWarnings();
@@ -161,8 +165,8 @@ namespace RecipePantryManager
 
             selectedItem.ExpiryDate =
                 dtpExpiry.Checked
-                ? (DateTime?)dtpExpiry.Value.Date
-                : null;
+                    ? (DateTime?)dtpExpiry.Value.Date
+                    : null;
 
             dgvPantry.Refresh();
 
@@ -299,7 +303,34 @@ namespace RecipePantryManager
         }
 
         // -------------------------------------------------
-        // SAVE RECIPE
+        // RECIPE LIST
+        // -------------------------------------------------
+
+        private void RefreshRecipeList(
+            IEnumerable<Recipe> source = null)
+        {
+            lstRecipes.Items.Clear();
+
+            if (source == null)
+            {
+                displayedRecipes =
+                    recipes.ToList();
+            }
+            else
+            {
+                displayedRecipes =
+                    source.ToList();
+            }
+
+            foreach (Recipe recipe in displayedRecipes)
+            {
+                lstRecipes.Items.Add(
+                    recipe.Name);
+            }
+        }
+
+        // -------------------------------------------------
+        // SAVE / UPDATE RECIPE
         // -------------------------------------------------
 
         private void btnSaveRecipe_Click(
@@ -329,35 +360,208 @@ namespace RecipePantryManager
                 return;
             }
 
-            Recipe recipe = new Recipe
+            if (editingRecipeIndex >= 0)
             {
-                Id = recipes.Count + 1,
+                Recipe recipeToUpdate =
+                    recipes[editingRecipeIndex];
 
-                Name =
-                    txtRecipeName.Text.Trim(),
+                recipeToUpdate.Name =
+                    txtRecipeName.Text.Trim();
 
-                Category =
-                    txtCategory.Text.Trim(),
+                recipeToUpdate.Category =
+                    txtCategory.Text.Trim();
 
-                Ingredients =
-                    currentIngredients.ToList()
-            };
+                recipeToUpdate.Ingredients =
+                    currentIngredients.ToList();
 
-            recipes.Add(recipe);
+                editingRecipeIndex = -1;
 
-            // Save recipe data
+                btnSaveRecipe.Text =
+                    "Save Recipe";
+
+                MessageBox.Show(
+                    "Recipe updated successfully.");
+            }
+            else
+            {
+                Recipe recipe = new Recipe
+                {
+                    Id = recipes.Count + 1,
+
+                    Name =
+                        txtRecipeName.Text.Trim(),
+
+                    Category =
+                        txtCategory.Text.Trim(),
+
+                    Ingredients =
+                        currentIngredients.ToList()
+                };
+
+                recipes.Add(recipe);
+
+                MessageBox.Show(
+                    "Recipe saved successfully.");
+            }
+
             storage.SaveRecipes(
                 recipes.ToList());
 
-            // Show recipe in saved recipes list
-            lstRecipes.Items.Add(recipe.Name);
-
-            MessageBox.Show(
-                "Recipe saved successfully.");
+            RefreshRecipeList();
 
             txtRecipeName.Clear();
             txtCategory.Clear();
             currentIngredients.Clear();
+        }
+
+        // -------------------------------------------------
+        // EDIT RECIPE
+        // -------------------------------------------------
+
+        private void btnEditRecipe_Click(
+            object sender,
+            EventArgs e)
+        {
+            if (lstRecipes.SelectedIndex == -1)
+            {
+                MessageBox.Show(
+                    "Please select a recipe to edit.");
+                return;
+            }
+
+            Recipe selectedRecipe =
+                displayedRecipes[
+                    lstRecipes.SelectedIndex];
+
+            editingRecipeIndex =
+                recipes.IndexOf(selectedRecipe);
+
+            txtRecipeName.Text =
+                selectedRecipe.Name;
+
+            txtCategory.Text =
+                selectedRecipe.Category;
+
+            currentIngredients.Clear();
+
+            foreach (
+                RecipeIngredient ingredient
+                in selectedRecipe.Ingredients)
+            {
+                currentIngredients.Add(
+                    new RecipeIngredient
+                    {
+                        Name =
+                            ingredient.Name,
+
+                        Quantity =
+                            ingredient.Quantity,
+
+                        Unit =
+                            ingredient.Unit
+                    });
+            }
+
+            btnSaveRecipe.Text =
+                "Update Recipe";
+        }
+
+        // -------------------------------------------------
+        // DELETE RECIPE
+        // -------------------------------------------------
+
+        private void btnDeleteRecipe_Click(
+            object sender,
+            EventArgs e)
+        {
+            if (lstRecipes.SelectedIndex == -1)
+            {
+                MessageBox.Show(
+                    "Please select a recipe to delete.");
+                return;
+            }
+
+            Recipe selectedRecipe =
+                displayedRecipes[
+                    lstRecipes.SelectedIndex];
+
+            DialogResult result =
+                MessageBox.Show(
+                    "Delete " +
+                    selectedRecipe.Name +
+                    "?",
+                    "Confirm Delete",
+                    MessageBoxButtons.YesNo);
+
+            if (result ==
+                DialogResult.Yes)
+            {
+                recipes.Remove(
+                    selectedRecipe);
+
+                storage.SaveRecipes(
+                    recipes.ToList());
+
+                RefreshRecipeList();
+
+                MessageBox.Show(
+                    "Recipe deleted successfully.");
+            }
+        }
+
+        // -------------------------------------------------
+        // SEARCH RECIPES
+        // -------------------------------------------------
+
+        private void btnSearchRecipes_Click(
+            object sender,
+            EventArgs e)
+        {
+            string search =
+                txtRecipeSearch.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(search))
+            {
+                RefreshRecipeList();
+                return;
+            }
+
+            List<Recipe> results =
+                recipes.Where(recipe =>
+                    recipe.Name.IndexOf(
+                        search,
+                        StringComparison.OrdinalIgnoreCase)
+                    >= 0
+                    ||
+                    recipe.Category.IndexOf(
+                        search,
+                        StringComparison.OrdinalIgnoreCase)
+                    >= 0
+                    ||
+                    recipe.Ingredients.Any(
+                        ingredient =>
+                            ingredient.Name.IndexOf(
+                                search,
+                                StringComparison.OrdinalIgnoreCase)
+                            >= 0)
+                ).ToList();
+
+            RefreshRecipeList(results);
+
+            if (results.Count == 0)
+            {
+                MessageBox.Show(
+                    "No matching recipes found.");
+            }
+        }
+
+        private void btnClearSearch_Click(
+            object sender,
+            EventArgs e)
+        {
+            txtRecipeSearch.Clear();
+
+            RefreshRecipeList();
         }
 
         // -------------------------------------------------
@@ -392,12 +596,12 @@ namespace RecipePantryManager
                                 item.Name.Equals(
                                     ingredient.Name,
                                     StringComparison
-                                    .OrdinalIgnoreCase)
+                                        .OrdinalIgnoreCase)
                                 &&
                                 item.Unit.Equals(
                                     ingredient.Unit,
                                     StringComparison
-                                    .OrdinalIgnoreCase));
+                                        .OrdinalIgnoreCase));
 
                     if (matchingItem == null)
                     {
@@ -447,10 +651,10 @@ namespace RecipePantryManager
             }
 
             Recipe selectedRecipe =
-                recipes[
+                displayedRecipes[
                     lstRecipes.SelectedIndex];
 
-            // First check whether all ingredients exist
+            // Check that all required ingredients exist
             foreach (
                 RecipeIngredient ingredient
                 in selectedRecipe.Ingredients)
@@ -461,12 +665,12 @@ namespace RecipePantryManager
                             item.Name.Equals(
                                 ingredient.Name,
                                 StringComparison
-                                .OrdinalIgnoreCase)
+                                    .OrdinalIgnoreCase)
                             &&
                             item.Unit.Equals(
                                 ingredient.Unit,
                                 StringComparison
-                                .OrdinalIgnoreCase));
+                                    .OrdinalIgnoreCase));
 
                 if (matchingItem == null ||
                     matchingItem.Quantity <
@@ -478,7 +682,7 @@ namespace RecipePantryManager
                 }
             }
 
-            // Deduct ingredient quantities
+            // Deduct pantry quantities
             foreach (
                 RecipeIngredient ingredient
                 in selectedRecipe.Ingredients)
@@ -489,12 +693,12 @@ namespace RecipePantryManager
                             item.Name.Equals(
                                 ingredient.Name,
                                 StringComparison
-                                .OrdinalIgnoreCase)
+                                    .OrdinalIgnoreCase)
                             &&
                             item.Unit.Equals(
                                 ingredient.Unit,
                                 StringComparison
-                                .OrdinalIgnoreCase));
+                                    .OrdinalIgnoreCase));
 
                 matchingItem.Quantity -=
                     ingredient.Quantity;
