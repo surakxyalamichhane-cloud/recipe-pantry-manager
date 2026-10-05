@@ -1,0 +1,129 @@
+[
+  {
+    "Id": 1,
+    "Name": "Scrambled Eggs",
+    "Category": "Breakfast",
+    "Ingredients": [
+      {
+        "Name": "Eggs",
+        "Quantity": 2,
+        "Unit": "pcs"
+      },
+      {
+        "Name": "Milk",
+        "Quantity": 0.1,
+        "Unit": "L"
+      },
+      {
+        "Name": "Butter",
+        "Quantity": 15,
+        "Unit": "g"
+      }
+    ]
+  },
+  {
+    "Id": 2,
+    "Name": "Chicken Rice",
+    "Category": "Dinner",
+    "Ingredients": [
+      {
+        "Name": "Chicken",
+        "Quantity": 300,
+        "Unit": "g"
+      },
+      {
+        "Name": "Rice",
+        "Quantity": 0.25,
+        "Unit": "kg"
+      },
+      {
+        "Name": "Tomato",
+        "Quantity": 2,
+        "Unit": "pcs"
+      },
+      {
+        "Name": "Onion",
+        "Quantity": 1,
+        "Unit": "pcs"
+      }
+    ]
+  },
+  {
+    "Id": 3,
+    "Name": "Egg Sandwich",
+    "Category": "Lunch",
+    "Ingredients": [
+      {
+        "Name": "Eggs",
+        "Quantity": 2,
+        "Unit": "pcs"
+      },
+      {
+        "Name": "Bread",
+        "Quantity": 4,
+        "Unit": "pcs"
+      },
+      {
+        "Name": "Butter",
+        "Quantity": 10,
+        "Unit": "g"
+      }
+    ]
+  },
+  {
+    "Id": 4,
+    "Name": "Cheese Omelette",
+    "Category": "Breakfast",
+    "Ingredients": [
+      {
+        "Name": "Eggs",
+        "Quantity": 3,
+        "Unit": "pcs"
+      },
+      {
+        "Name": "Cheese",
+        "Quantity": 100,
+        "Unit": "g"
+      }
+    ]
+  },
+  {
+    "Id": 5,
+    "Name": "Pasta Tomato",
+    "Category": "Dinner",
+    "Ingredients": [
+      {
+        "Name": "Pasta",
+        "Quantity": 250,
+        "Unit": "g"
+      },
+      {
+        "Name": "Tomato",
+        "Quantity": 2,
+        "Unit": "pcs"
+      },
+      {
+        "Name": "Onion",
+        "Quantity": 1,
+        "Unit": "pcs"
+      }
+    ]
+  },
+  {
+    "Id": 6,
+    "Name": "Family Chicken Dinner",
+    "Category": "Dinner",
+    "Ingredients": [
+      {
+        "Name": "Chicken",
+        "Quantity": 1200,
+        "Unit": "g"
+      },
+      {
+        "Name": "Rice",
+        "Quantity": 0.5,
+        "Unit": "kg"
+      }
+    ]
+  }
+]

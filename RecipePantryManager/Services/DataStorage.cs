@@ -9,8 +9,32 @@ namespace RecipePantryManager.Services
 {
     public class DataStorage
     {
-        private string pantryFile = "pantry.json";
-        private string recipeFile = "recipes.json";
+        private readonly string dataFolder;
+        private readonly string pantryFile;
+        private readonly string recipeFile;
+
+        public DataStorage()
+        {
+            dataFolder = Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory,
+                "Data"
+            );
+
+            pantryFile = Path.Combine(
+                dataFolder,
+                "pantry.json"
+            );
+
+            recipeFile = Path.Combine(
+                dataFolder,
+                "recipes.json"
+            );
+
+            if (!Directory.Exists(dataFolder))
+            {
+                Directory.CreateDirectory(dataFolder);
+            }
+        }
 
         public List<PantryItem> LoadPantry()
         {
@@ -21,7 +45,8 @@ namespace RecipePantryManager.Services
                     return new List<PantryItem>();
                 }
 
-                string json = File.ReadAllText(pantryFile);
+                string json =
+                    File.ReadAllText(pantryFile);
 
                 List<PantryItem> items =
                     JsonSerializer.Deserialize<List<PantryItem>>(json);
@@ -30,25 +55,33 @@ namespace RecipePantryManager.Services
             }
             catch
             {
-                MessageBox.Show("Unable to load pantry data.");
+                MessageBox.Show(
+                    "Unable to load pantry data.");
                 return new List<PantryItem>();
             }
         }
 
-        public void SavePantry(List<PantryItem> items)
+        public void SavePantry(
+            List<PantryItem> items)
         {
             try
             {
-                string json = JsonSerializer.Serialize(
-                    items,
-                    new JsonSerializerOptions { WriteIndented = true }
-                );
+                string json =
+                    JsonSerializer.Serialize(
+                        items,
+                        new JsonSerializerOptions
+                        {
+                            WriteIndented = true
+                        });
 
-                File.WriteAllText(pantryFile, json);
+                File.WriteAllText(
+                    pantryFile,
+                    json);
             }
             catch
             {
-                MessageBox.Show("Unable to save pantry data.");
+                MessageBox.Show(
+                    "Unable to save pantry data.");
             }
         }
 
@@ -61,34 +94,43 @@ namespace RecipePantryManager.Services
                     return new List<Recipe>();
                 }
 
-                string json = File.ReadAllText(recipeFile);
+                string json =
+                    File.ReadAllText(recipeFile);
 
-                List<Recipe> savedRecipes =
+                List<Recipe> recipes =
                     JsonSerializer.Deserialize<List<Recipe>>(json);
 
-                return savedRecipes ?? new List<Recipe>();
+                return recipes ?? new List<Recipe>();
             }
             catch
             {
-                MessageBox.Show("Unable to load recipe data.");
+                MessageBox.Show(
+                    "Unable to load recipe data.");
                 return new List<Recipe>();
             }
         }
 
-        public void SaveRecipes(List<Recipe> recipes)
+        public void SaveRecipes(
+            List<Recipe> recipes)
         {
             try
             {
-                string json = JsonSerializer.Serialize(
-                    recipes,
-                    new JsonSerializerOptions { WriteIndented = true }
-                );
+                string json =
+                    JsonSerializer.Serialize(
+                        recipes,
+                        new JsonSerializerOptions
+                        {
+                            WriteIndented = true
+                        });
 
-                File.WriteAllText(recipeFile, json);
+                File.WriteAllText(
+                    recipeFile,
+                    json);
             }
             catch
             {
-                MessageBox.Show("Unable to save recipe data.");
+                MessageBox.Show(
+                    "Unable to save recipe data.");
             }
         }
     }
